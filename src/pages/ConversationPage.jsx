@@ -1,12 +1,22 @@
-import { Link } from 'react-router-dom'
+import { useEffect } from 'react'
+import { useSearchParams } from 'react-router-dom'
+import ChatWindow from '../components/ChatWindow.jsx'
+import ConversationList from '../components/ConversationList.jsx'
+import useChats from '../hooks/useChats.js'
 
 function ConversationPage() {
+  const [searchParams] = useSearchParams()
+  const chatId = searchParams.get('contacto')
+  const { markAsRead } = useChats()
+
+  useEffect(() => {
+    if (chatId) markAsRead(chatId)
+  }, [chatId, markAsRead])
+
   return (
-    <main className="simple-page">
-      <span className="eyebrow">Conversación</span>
-      <h1>Chat seleccionado</h1>
-      <p>La mensajería interactiva se integrará en el siguiente bloque.</p>
-      <Link className="primary-link" to="/chats">Volver a conversaciones</Link>
+    <main className="workspace conversation-workspace">
+      <ConversationList />
+      <ChatWindow chatId={chatId} />
     </main>
   )
 }
